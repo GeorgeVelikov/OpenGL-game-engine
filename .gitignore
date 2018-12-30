@@ -8,6 +8,7 @@
 *.lo
 *.o
 *.obj
+*.iobj
 
 # Precompiled Headers
 *.gch
@@ -34,10 +35,12 @@
 *.app
 
 # VS stuff
+*.enc
 *.tlog
 *.log
 *.idb
 *.pdb
+*.ipdb
 *.user
 *.filters
 *.suo
