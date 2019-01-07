@@ -54,8 +54,8 @@ float fpsNormalise;
 float rayAngle;
 float distanceToWall;
 bool blockBoundary;
-float eyeX;
-float eyeY;
+float eyeX, eyeY;
+int rayHitX, rayHitY;
 
 // world
 std::wstring map;
