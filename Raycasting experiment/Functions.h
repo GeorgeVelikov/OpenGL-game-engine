@@ -25,10 +25,14 @@ void moveLR(float direction)
     }
 }
 
-void rotate(float direction) {
-    playerYaw += direction * float(ROTATIONAL_STEP * fpsNormalise);
+void rotatationCheck() {
+    POINT currentPoint;
+    GetCursorPos(&currentPoint);
+    playerYaw -= (windowMidX - currentPoint.x) * ROTATIONAL_STEP * fpsNormalise;
+
+    // limit playerYaw to be in the range -PI to PI
     if (playerYaw < -PI) playerYaw = 2*PI - playerYaw;
-    if (playerYaw > +PI) playerYaw = playerYaw - 2*PI ;
+    else if (playerYaw > +PI) playerYaw = playerYaw - 2*PI ;
 }
 
 void shadeWall() {
@@ -38,4 +42,13 @@ void shadeWall() {
     else if (distanceToWall < MAX_DEPTH)        wallShade = WALL_SHADE_LIGHT;
     else                                        wallShade = CLEAR_SHADE;    
     if(blockBoundary)                           wallShade = CLEAR_SHADE; // adds the division between different blocks
+}
+
+void setCursorMidScreen()
+{
+    RECT rect = { NULL };
+    if (GetWindowRect(GetConsoleWindow(), &rect)) { windowStartX = rect.left; windowStartY = rect.top; }
+    windowMidX = windowStartX + (SCREEN_WIDTH * 4 / 2);
+    windowMidY = windowStartY + (SCREEN_HEIGHT * 6 / 2);
+    SetCursorPos(windowMidX, windowMidY);
 }

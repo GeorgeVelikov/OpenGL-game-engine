@@ -7,8 +7,8 @@
 #define PI 3.1415927
 
 // might want to change width and height to your prefferenced window size as rendering is not dynamic just yet
-#define SCREEN_WIDTH 150
-#define SCREEN_HEIGHT 50
+#define SCREEN_WIDTH 240
+#define SCREEN_HEIGHT 120
 #define SCREEN_PIXEL_COUNT (SCREEN_WIDTH*SCREEN_HEIGHT)
 #define SCREEN_DRAW_START {0,0}
 
@@ -22,7 +22,7 @@
 #define WALL_BOUNDARY_AMOUNT 2
 
 // movement
-#define ROTATIONAL_STEP (PI/2.f)
+#define ROTATIONAL_STEP 0.2f
 #define MOVEMENT_STEP 5.f
 
 // map defs should go hand in hand with actual map size for 1:1 accuracy
@@ -49,6 +49,8 @@ auto timeStamp = std::chrono::system_clock::now();
 auto timeStampDynamic = std::chrono::system_clock::now();
 std::chrono::duration<float> frameTime;
 float fpsNormalise;
+int windowStartX, windowStartY;
+int windowMidX, windowMidY;
 
 // raycasting
 float rayAngle;
@@ -65,3 +67,4 @@ int worldFloor;
 // shader
 short wallShade;
 short floorShade;
+
