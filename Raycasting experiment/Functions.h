@@ -39,8 +39,8 @@ void rotatationCheck() {
     // up - down
     if (windowMidY != currentPoint.y)
     {
-        if (windowMidY < currentPoint.y-PI && lookY <= 180) lookY += SCREEN_HEIGHT * fpsNormalise;
-        else if (windowMidY > currentPoint.y+PI && lookY >= -180) lookY -= SCREEN_HEIGHT * fpsNormalise;
+        if (windowMidY < currentPoint.y - PI && lookY <= 180) lookY += SCREEN_HEIGHT * fpsNormalise;
+        else if (windowMidY > currentPoint.y + PI && lookY >= -180) lookY -= SCREEN_HEIGHT * fpsNormalise;
     }
     
 }
@@ -58,7 +58,7 @@ void setCursorMidScreen()
 {
     RECT rect = { NULL };
     if (GetWindowRect(GetConsoleWindow(), &rect)) { windowStartX = rect.left; windowStartY = rect.top; }
-    windowMidX = windowStartX + (SCREEN_WIDTH * 4 / 2);
-    windowMidY = windowStartY + (SCREEN_HEIGHT * 6 / 2);
+    windowMidX = windowStartX + (SCREEN_WIDTH * 4 / 2); // 4 pix wide char
+    windowMidY = windowStartY + (SCREEN_HEIGHT * 6 / 2); // 6 pix wide char
     SetCursorPos(windowMidX, windowMidY);
 }
