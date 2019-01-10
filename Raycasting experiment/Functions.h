@@ -26,13 +26,15 @@ void moveLR(float direction)
 }
 
 void rotatationCheck() {
-    POINT currentPoint;
     GetCursorPos(&currentPoint);
-    playerYaw -= (windowMidX - currentPoint.x) * ROTATIONAL_STEP * fpsNormalise;
-
-    // limit playerYaw to be in the range -PI to PI
-    if (playerYaw < -PI) playerYaw = 2*PI - playerYaw;
-    else if (playerYaw > +PI) playerYaw = playerYaw - 2*PI ;
+    if (windowMidX != currentPoint.x)
+    {
+        playerYaw -= (windowMidX - currentPoint.x) * ROTATIONAL_STEP * fpsNormalise;
+        // limit playerYaw to be in the range -PI to PI
+        if (playerYaw < -PI) playerYaw = 2 * PI - playerYaw;
+        else if (playerYaw > +PI) playerYaw = playerYaw - 2 * PI;
+    }
+   
 }
 
 void shadeWall() {
