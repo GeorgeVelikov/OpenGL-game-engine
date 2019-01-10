@@ -34,7 +34,14 @@ void rotatationCheck() {
         if (playerYaw < -PI) playerYaw = 2 * PI - playerYaw;
         else if (playerYaw > +PI) playerYaw = playerYaw - 2 * PI;
     }
-   
+    if (windowMidY != currentPoint.y)
+    {
+        if (windowMidY < currentPoint.y-PI)
+            lookY += SCREEN_HEIGHT * fpsNormalise;
+        else if (windowMidY > currentPoint.y+PI)
+            lookY -= SCREEN_HEIGHT * fpsNormalise;
+    }
+    
 }
 
 void shadeWall() {

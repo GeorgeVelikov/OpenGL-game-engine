@@ -40,8 +40,9 @@
 // player
 float playerX = 1.5f;
 float playerY = 3.24f;
-float playerYaw = .0f;
+float playerYaw = .0f; // left right camera movement, used in a 2d prespective
 bool playerTouchWall = false;
+float lookY = 0.f; //up down camera movement (Y camera axis of some 3d world)
 
 // game
 bool running = true;
@@ -56,7 +57,7 @@ POINT currentPoint;
 POINT midPoint;
 
 // raycasting
-float rayAngle;
+float ray;
 float distanceToWall;
 bool blockBoundary;
 float eyeX, eyeY;
