@@ -27,6 +27,7 @@ void moveLR(float direction)
 
 void rotatationCheck() {
     GetCursorPos(&currentPoint);
+    // left - right
     if (windowMidX != currentPoint.x)
     {
         playerYaw -= (windowMidX - currentPoint.x) * ROTATIONAL_STEP * fpsNormalise;
@@ -34,12 +35,12 @@ void rotatationCheck() {
         if (playerYaw < -PI) playerYaw = 2 * PI - playerYaw;
         else if (playerYaw > +PI) playerYaw = playerYaw - 2 * PI;
     }
+
+    // up - down
     if (windowMidY != currentPoint.y)
     {
-        if (windowMidY < currentPoint.y-PI)
-            lookY += SCREEN_HEIGHT * fpsNormalise;
-        else if (windowMidY > currentPoint.y+PI)
-            lookY -= SCREEN_HEIGHT * fpsNormalise;
+        if (windowMidY < currentPoint.y-PI && lookY <= 180) lookY += SCREEN_HEIGHT * fpsNormalise;
+        else if (windowMidY > currentPoint.y+PI && lookY >= -180) lookY -= SCREEN_HEIGHT * fpsNormalise;
     }
     
 }
