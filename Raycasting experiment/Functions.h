@@ -1,6 +1,6 @@
 void moveFB(float direction) {
-    float x_move = direction * float(sinf(playerYaw) * MOVEMENT_STEP * fpsNormalise);
-    float y_move = direction * float(cosf(playerYaw) * MOVEMENT_STEP * fpsNormalise);
+    float x_move = direction * float(sinf(cameraX) * MOVEMENT_STEP * fpsNormalise);
+    float y_move = direction * float(cosf(cameraX) * MOVEMENT_STEP * fpsNormalise);
     if (map[int(playerY + y_move) * MAP_WIDTH + int(playerX + x_move)] != '#') { // check if the loc we want to go to is a wall, if it's not, move to loc
         playerX += x_move; playerY += y_move;
     }
@@ -12,13 +12,13 @@ void moveLR(float direction)
     int y_sign = 1;
 
     // split viewing area into 4 quadrants 
-    if (playerYaw > -PI && playerYaw <= -PI / 2.f) { x_sign = -1; y_sign = +1; }
-    else if (playerYaw > -PI / 2.f && playerYaw <= 0) { x_sign = +1; y_sign = +1; }
-    else if (playerYaw > 0 && playerYaw <= PI / 2.f) { x_sign = +1; y_sign = -1; }
-    else if (playerYaw > PI / 2.f && playerYaw <= PI) { x_sign = -1; y_sign = -1; }
+    if (cameraX > -PI && cameraX <= -PI / 2.f) { x_sign = -1; y_sign = +1; }
+    else if (cameraX > -PI / 2.f && cameraX <= 0) { x_sign = +1; y_sign = +1; }
+    else if (cameraX > 0 && cameraX <= PI / 2.f) { x_sign = +1; y_sign = -1; }
+    else if (cameraX > PI / 2.f && cameraX <= PI) { x_sign = -1; y_sign = -1; }
 
-    float x_move = x_sign * direction * float(pow(cosf(playerYaw), 2) * MOVEMENT_STEP / 2 * fpsNormalise);
-    float y_move = y_sign * direction * float(pow(sinf(playerYaw), 2) * MOVEMENT_STEP / 2 * fpsNormalise);
+    float x_move = x_sign * direction * float(pow(cosf(cameraX), 2) * MOVEMENT_STEP / 2 * fpsNormalise);
+    float y_move = y_sign * direction * float(pow(sinf(cameraX), 2) * MOVEMENT_STEP / 2 * fpsNormalise);
 
     if (map[int(playerY + y_move) * MAP_WIDTH + int(playerX + x_move)] != '#') { // check if the loc we want to go to is a wall, if it's not, move to loc
         playerX += x_move; playerY += y_move;
@@ -30,17 +30,17 @@ void rotatationCheck() {
     // left - right
     if (windowMidX != currentPoint.x)
     {
-        playerYaw -= (windowMidX - currentPoint.x) * ROTATIONAL_STEP * fpsNormalise;
+        cameraX -= (windowMidX - currentPoint.x) * ROTATIONAL_STEP * fpsNormalise;
         // limit playerYaw to be in the range -PI to PI
-        if (playerYaw < -PI) playerYaw = 2 * PI - playerYaw;
-        else if (playerYaw > +PI) playerYaw = playerYaw - 2 * PI;
+        if (cameraX < -PI) cameraX = 2 * PI - cameraX;
+        else if (cameraX > +PI) cameraX = cameraX - 2 * PI;
     }
 
     // up - down
     if (windowMidY != currentPoint.y)
     {
-        if (windowMidY < currentPoint.y - PI && lookY <= 180) lookY += SCREEN_HEIGHT * fpsNormalise;
-        else if (windowMidY > currentPoint.y + PI && lookY >= -180) lookY -= SCREEN_HEIGHT * fpsNormalise;
+        if (windowMidY < currentPoint.y -1 && cameraY <= 360) cameraY += SCREEN_HEIGHT * fpsNormalise;
+        else if (windowMidY > currentPoint.y +1 && cameraY >= -360) cameraY -= SCREEN_HEIGHT * fpsNormalise;
     }
     
 }
@@ -58,7 +58,17 @@ void setCursorMidScreen()
 {
     RECT rect = { NULL };
     if (GetWindowRect(GetConsoleWindow(), &rect)) { windowStartX = rect.left; windowStartY = rect.top; }
-    windowMidX = windowStartX + (SCREEN_WIDTH * 4 / 2); // 4 pix wide char
-    windowMidY = windowStartY + (SCREEN_HEIGHT * 6 / 2); // 6 pix wide char
+    windowMidX = windowStartX + (SCREEN_WIDTH * PIXEL_SIZE_WIDTH / 2); // 4 pix wide char
+    windowMidY = windowStartY + (SCREEN_HEIGHT * PIXEL_SIZE_HEIGHT / 2); // 6 pix wide char
     SetCursorPos(windowMidX, windowMidY);
+}
+
+void setWindowCentered()
+{
+    HWND consoleWindow = GetConsoleWindow();
+    RECT desktop;
+    GetWindowRect(GetDesktopWindow(), &desktop);
+    int locMidX = desktop.right / 2 - SCREEN_MID_TO_LEFT;
+    int locMidY = desktop.bottom / 2 - SCREEN_MID_TO_TOP;
+    MoveWindow(consoleWindow, locMidX, locMidY, desktop.right, desktop.bottom, TRUE);
 }

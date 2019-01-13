@@ -7,15 +7,19 @@
 #define PI 3.1415927
 
 // might want to change width and height to your prefferenced window size as rendering is not dynamic just yet
-#define SCREEN_WIDTH 190
-#define SCREEN_HEIGHT 120
+#define SCREEN_WIDTH 240
+#define SCREEN_HEIGHT 130
 #define SCREEN_PIXEL_COUNT (SCREEN_WIDTH*SCREEN_HEIGHT)
 #define SCREEN_DRAW_START {0,0}
+#define PIXEL_SIZE_WIDTH 4
+#define PIXEL_SIZE_HEIGHT 6
+#define SCREEN_MID_TO_LEFT (SCREEN_WIDTH*PIXEL_SIZE_WIDTH / 2);
+#define SCREEN_MID_TO_TOP (SCREEN_HEIGHT*PIXEL_SIZE_HEIGHT / 2)
 
 // raycasting
 #define FOV (PI/3.f)
 #define MAX_DEPTH 16.f
-#define RAY_STEP .1f
+#define RAY_STEP .025f
 
 // wall specific render settings
 #define WALL_BOUNDARY_THRESHOLD .005f
@@ -40,9 +44,9 @@
 // player
 float playerX = 1.5f;
 float playerY = 3.24f;
-float playerYaw = .0f; // left right camera movement, used in a 2d prespective
+float cameraX = .0f;
+float cameraY = .0f; //up down camera movement (Y camera axis of some 3d world)
 bool playerTouchWall = false;
-float lookY = 0.f; //up down camera movement (Y camera axis of some 3d world)
 
 // game
 bool running = true;
@@ -50,11 +54,16 @@ auto timeStamp = std::chrono::system_clock::now();
 auto timeStampDynamic = std::chrono::system_clock::now();
 std::chrono::duration<float> frameTime;
 float fpsNormalise;
+
+// console
+HWND consoleName;
+HANDLE consoleBuffer;
+POINT midPoint;
+POINT currentPoint;
+CONSOLE_FONT_INFOEX cfi;
+wchar_t *screen;
 int windowStartX, windowStartY;
 int windowMidX, windowMidY;
-HWND consoleName;
-POINT currentPoint;
-POINT midPoint;
 
 // raycasting
 float ray;
@@ -71,4 +80,3 @@ int worldFloor;
 // shader
 short wallShade;
 short floorShade;
-
