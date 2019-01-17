@@ -1,3 +1,4 @@
+#include <iostream>
 #include <chrono>
 #include <vector>
 #include <algorithm>
@@ -8,7 +9,7 @@
 
 // might want to change width and height to your prefferenced window size as rendering is not dynamic just yet
 #define SCREEN_WIDTH 240
-#define SCREEN_HEIGHT 130
+#define SCREEN_HEIGHT 110
 #define SCREEN_PIXEL_COUNT (SCREEN_WIDTH*SCREEN_HEIGHT)
 #define SCREEN_DRAW_START {0,0}
 #define PIXEL_SIZE_WIDTH 4
@@ -22,7 +23,7 @@
 #define RAY_STEP .025f
 
 // wall specific render settings
-#define WALL_BOUNDARY_THRESHOLD .005f
+#define WALL_BOUNDARY_THRESHOLD .002f
 #define WALL_BOUNDARY_AMOUNT 2
 
 // movement
@@ -41,12 +42,23 @@
 #define FLOOR_SHADE 0x002A
 #define CLEAR_SHADE 0x0020
 
+struct Vertex2D { float x, y; };
+struct Vertex3D { float x, y, z; };
+
 // player
-float playerX = 1.5f;
-float playerY = 3.24f;
-float cameraX = .0f;
-float cameraY = .0f; //up down camera movement (Y camera axis of some 3d world)
-bool playerTouchWall = false;
+struct Player {
+    Vertex2D location;
+    float cameraX;
+    float cameraY;
+    bool touchWall;
+};
+
+struct Sector {
+    Vertex2D *vertex;
+    float floor, ceil;
+    char *neighbours;
+    int vertexCount;
+} *sectors = NULL;
 
 // game
 bool running = true;
@@ -80,3 +92,6 @@ int worldFloor;
 // shader
 short wallShade;
 short floorShade;
+
+// stuff
+Player player;
