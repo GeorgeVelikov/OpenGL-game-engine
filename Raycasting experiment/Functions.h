@@ -24,8 +24,8 @@ void rotatationCheck() {
     // up - down
     if (windowMidY != currentPoint.y)
     {
-        if (windowMidY < currentPoint.y - 1 && player.cameraYaw.y <= 360) player.cameraYaw.y += SCREEN_HEIGHT *fpsNormalise;
-        else if (windowMidY > currentPoint.y +1 && player.cameraYaw.y >= -360) player.cameraYaw.y -= SCREEN_HEIGHT * fpsNormalise;
+        if (windowMidY < currentPoint.y && player.cameraYaw.y <= 360) player.cameraYaw.y += 2;
+        else if (windowMidY > currentPoint.y && player.cameraYaw.y >= -360) player.cameraYaw.y -= 2;
     }
 }
 

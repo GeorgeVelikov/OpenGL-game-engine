@@ -6,9 +6,7 @@
 #include <Windows.h>
 
 #define PI 3.1415927
-#define MIN(a,b) (a<b?a:b)
-#define MAX(a,b) (a>b?a:b)
-#define VECTOR_CROSS_PRODUCT(x1,y1, x2,y2) (x1*y2 - x2*y1)
+#define VXP(x1,y1, x2,y2) (x1*y2 - x2*y1)
 
 // might want to change width and height to your prefferenced window size as rendering is not dynamic just yet
 #define SCREEN_WIDTH 240
@@ -30,7 +28,7 @@
 #define WALL_BOUNDARY_AMOUNT 2
 
 // movement
-#define ROTATIONAL_STEP 0.1f
+#define ROTATIONAL_STEP .1f
 #define MOVEMENT_STEP 5.f
 
 // map defs should go hand in hand with actual map size for 1:1 accuracy
@@ -54,13 +52,8 @@ struct Player {
     Vertex2D cameraYaw;
     bool touchWall;
     float moveDirection;
+    int sector;
 } player;
-struct Sector {
-    Vertex2D *vertex;
-    float floor, ceil;
-    char *neighbours;
-    int vertexCount;
-} *sectors = NULL;
 
 // game
 bool running = true;
