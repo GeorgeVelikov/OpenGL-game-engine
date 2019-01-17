@@ -6,6 +6,9 @@
 #include <Windows.h>
 
 #define PI 3.1415927
+#define MIN(a,b) (a<b?a:b)
+#define MAX(a,b) (a>b?a:b)
+#define VECTOR_CROSS_PRODUCT(x1,y1, x2,y2) (x1*y2 - x2*y1)
 
 // might want to change width and height to your prefferenced window size as rendering is not dynamic just yet
 #define SCREEN_WIDTH 240
@@ -48,11 +51,10 @@ struct Vertex3D { float x, y, z; };
 // player
 struct Player {
     Vertex2D location;
-    float cameraX;
-    float cameraY;
+    Vertex2D cameraYaw;
     bool touchWall;
-};
-
+    float moveDirection;
+} player;
 struct Sector {
     Vertex2D *vertex;
     float floor, ceil;
@@ -92,6 +94,3 @@ int worldFloor;
 // shader
 short wallShade;
 short floorShade;
-
-// stuff
-Player player;
