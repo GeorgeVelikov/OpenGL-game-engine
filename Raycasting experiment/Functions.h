@@ -1,7 +1,7 @@
 void playerMove(float player_angle) {
     player_angle += -player.cameraYaw.x + PI/2;
-    float x_move = cosf(player_angle + PI * 2) * MOVEMENT_STEP;
-    float y_move = sinf(player_angle + PI * 2) * MOVEMENT_STEP;
+    float x_move = cosf(player_angle) * MOVEMENT_STEP;
+    float y_move = sinf(player_angle) * MOVEMENT_STEP;
 
     x_move *= fpsNormalise;
     y_move *= fpsNormalise;
