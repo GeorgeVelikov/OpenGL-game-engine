@@ -117,7 +117,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -160,10 +160,13 @@
   <ItemGroup>
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="Functions.h" />
+    <ClInclude Include="GLFunctions.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\GL\glad\src\glad.cpp" />
+    <ClCompile Include="GLFunctions.cpp" />
     <ClCompile Include="RaycastingASCII.cpp" />
     <ClCompile Include="RaycastingGL.cpp" />
     <ClCompile Include="stdafx.cpp">
