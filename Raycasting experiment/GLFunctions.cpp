@@ -1,5 +1,8 @@
 #include "stdafx.h"
 #include "headers/GLFunctions.h"
+#include "headers/stb_image.h"
+
+
 
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -17,9 +20,26 @@ void setupGLFW() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
  
-void initGLAD() {
+void setupGLAD() {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        return;
     }
+}
+
+void load2DImageAsTexture(unsigned int *texture, int id, const char* path) {
+    glGenTextures(id, &*texture);
+    glBindTexture(GL_TEXTURE_2D, *texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load and generate the texture
+    int w, h, channels;
+    unsigned char *data = stbi_load(path, &w, &h, &channels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else std::cout << "Error: failed to load texture";
+    stbi_image_free(data);
 }
