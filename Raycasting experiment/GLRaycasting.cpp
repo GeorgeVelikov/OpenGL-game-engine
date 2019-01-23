@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <iostream>  
+#include <math.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -21,24 +22,77 @@ int main()
     GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL", NULL, NULL);
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, frameBufferCheck);
-
+    
     // load all OpenGL function pointers for glad
     setupGLAD();
 
     // build and compile our shader program
     Shader glShader("shaders/shader.vs", "shaders/shader.fs");
+    glEnable(GL_DEPTH_TEST);
 
-    float vertices[] = {
-        // positions      //texture coords
-        -.5f, -.5f, .0f,  0.f, 0.f,
-         .5f, -.5f, .0f,  1.f, 0.f,
-        -.5f,  .5f, .0f,  0.f, 1.f,
-         .5f,  .5f, .0f,  1.f, 1.f
+    float cubeVertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
     };
 
     unsigned int indices[] = {
-        0, 1, 2, // first triangle
-        1, 2, 3 // second triangle
+        0, 1, 2, // half of a square (triangle)
+        1, 2, 3, 
+
+        4, 5, 6,
+        5, 6, 7,
+
+        8, 9, 10,
+        9, 10, 11,
+
+        12, 13, 14,
+        13, 14, 15,
+
+        16, 17, 18,
+        17, 18, 19,
+
+        20, 21, 22,
+        21, 22, 23,
+    };
+
+    glm::vec3 positions[] = {
+        glm::vec3(0.0f,  0.0f,  -2.0f),
+        glm::vec3(2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3(2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),
+        glm::vec3(1.5f,  2.0f, -2.5f),
+        glm::vec3(1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
     };
 
     // vertex buffer, vertex array and element buffer
@@ -51,7 +105,7 @@ int main()
 
     // put vertice array in a buffer
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
 
     // create shapes by the vertex id 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -65,14 +119,15 @@ int main()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    unsigned int textureTile;
-    load2DImageAsTexture(&textureTile, 1, "textures/tile.png");
+    unsigned int textureWood;
+    load2DImageAsTexture(&textureWood, 1, "textures/wood.png");
 
     glShader.use();
     glShader.setInt("texture1", 0);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_LINE//GL_FILL solids
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // GL_LINE//GL_FILL solids
     // render loop    
+
     while (!glfwWindowShouldClose(window))
     {
         // input
@@ -80,26 +135,35 @@ int main()
 
         // render
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // bind textures on tex units
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textureTile);
-
-        // create transformations
-        glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        transform = glm::translate(transform, glm::vec3(.2f, -.2f, .0f));
-        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(.7f, -.9f, .5f));
+        glBindTexture(GL_TEXTURE_2D, textureWood);
 
         // get marix uniform loc
         glShader.use();
-        unsigned int transformLoc = glGetUniformLocation(glShader.id, "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+
+        glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        glm::mat4 projection = glm::mat4(1.0f);
+        projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+        // pass transformation matrices to the shader
+        glShader.setMat4("projection", projection);
+        glShader.setMat4("view", view);
 
         // render shape
-        glBindVertexArray(VAO); 
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    
+        for (unsigned int i = 0; i <= 10; i++) {
+            glBindVertexArray(VAO);
+            glm::mat4 model = glm::mat4(1.f);
+            model = glm::translate(model, positions[i]);
+            float angle = glfwGetTime() * 25.f;
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.f, .3f, .5f));
+            glShader.setMat4("model", model);
+            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        }
+
         // swap buffers and poll for io events
         glfwSwapBuffers(window);
         glfwPollEvents();
