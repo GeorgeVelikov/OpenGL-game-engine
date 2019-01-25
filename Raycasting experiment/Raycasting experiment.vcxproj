@@ -159,10 +159,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\GL\glad\src\glad.cpp" />
+    <ClCompile Include="GLCamera.cpp" />
     <ClCompile Include="GLFunctions.cpp" />
     <ClCompile Include="GLShader.cpp" />
     <ClCompile Include="UNICODERaycasting.cpp" />
-    <ClCompile Include="GLRaycasting.cpp" />
+    <ClCompile Include="GLMain.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -171,6 +172,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="headers\GLCamera.h" />
     <ClInclude Include="headers\GLFunctions.h" />
     <ClInclude Include="headers\GLShader.h" />
     <ClInclude Include="headers\stb_image.h" />
