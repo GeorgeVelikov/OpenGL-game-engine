@@ -1,6 +1,19 @@
 #include "stdafx.h"
+#include <math.h>
 #include "headers/GLCamera.h"
 
+
+Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) {
+    Front = glm::vec3(0.0f, 0.0f, -1.0f);
+    MovementSpeed = SPEED;
+    MouseSensitivity = SENSITIVITY;
+    Zoom = FOV;
+    Position = position;
+    WorldUp = up;
+    Yaw = yaw;
+    Pitch = pitch;
+    updateCamera();
+}
 
 glm::mat4 Camera::getViewMatrix() {
     return glm::lookAt(Position, Position + Front, Up);

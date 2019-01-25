@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "headers/GLFunctions.h"
+#define STB_IMAGE_IMPLEMENTATION
 #include "headers/stb_image.h"
-
+#include "headers/GLFunctions.h"
 
 
 void processInput(GLFWwindow *window) {
@@ -14,7 +14,11 @@ void processInput(GLFWwindow *window) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-void frameBufferCheck(GLFWwindow* window, int width, int height) {
+void mouseCallback(GLFWwindow *window, double xpos, double ypos) {
+
+}
+
+void frameBufferCheck(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 

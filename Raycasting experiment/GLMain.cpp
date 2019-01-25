@@ -1,27 +1,18 @@
 #include "stdafx.h"
-#include <iostream>  
-#include <math.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glad/glad.h>
-#include <glfw3.h>
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "headers/stb_image.h"
-#include "headers/GLFunctions.h"
-#include "headers/GLShader.h"
-
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#include "headers/GLMain.h"
 
 
 int main()
 {
+
+    mouse = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
+    time  = {              0.f,               0.f };
+
     setupGLFW();
     GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL", NULL, NULL);
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, frameBufferCheck);
+    glfwSetCursorPosCallback(window, mouseCallback);
     
     // load all OpenGL function pointers for glad
     setupGLAD();
@@ -29,71 +20,6 @@ int main()
     // build and compile our shader program
     Shader glShader("shaders/shader.vs", "shaders/shader.fs");
     glEnable(GL_DEPTH_TEST);
-
-    float cubeVertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    };
-
-    unsigned int indices[] = {
-        0, 1, 2, // half of a square (triangle)
-        1, 2, 3, 
-
-        4, 5, 6,
-        5, 6, 7,
-
-        8, 9, 10,
-        9, 10, 11,
-
-        12, 13, 14,
-        13, 14, 15,
-
-        16, 17, 18,
-        17, 18, 19,
-
-        20, 21, 22,
-        21, 22, 23,
-    };
-
-    glm::vec3 positions[] = {
-        glm::vec3(0.0f,  0.0f,  -2.0f),
-        glm::vec3(2.0f,  5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f,  3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),
-        glm::vec3(1.5f,  2.0f, -2.5f),
-        glm::vec3(1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
-    };
 
     // vertex buffer, vertex array and element buffer
     unsigned int VBO, VAO, EBO;
@@ -119,6 +45,7 @@ int main()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
+    // textures
     unsigned int textureWood;
     load2DImageAsTexture(&textureWood, 1, "textures/wood.png");
 
@@ -158,7 +85,7 @@ int main()
             glBindVertexArray(VAO);
             glm::mat4 model = glm::mat4(1.f);
             model = glm::translate(model, positions[i]);
-            float angle = glfwGetTime() * 25.f;
+            float angle = float(glfwGetTime()) * 25.f;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.f, .3f, .5f));
             glShader.setMat4("model", model);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -168,6 +95,7 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
     // glfw: terminate and clearing all previously allocated resources.
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
