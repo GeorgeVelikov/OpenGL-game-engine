@@ -56,6 +56,7 @@ int main()
     // render loop    
     while (!glfwWindowShouldClose(window))
     {
+        std::cout << 1 / time.delta << '\n';
         time.current = glfwGetTime();
         time.delta = time.current - time.past;
         time.past = time.current;
