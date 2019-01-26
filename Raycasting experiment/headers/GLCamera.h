@@ -14,7 +14,7 @@ enum cameraMovement {
 #define SPEED         2.5f
 #define SENSITIVITY   0.1f
 #define FOV          45.0f
-#define MAXPITCH     90.0f
+#define MAXPITCH     89.0f
 
 class Camera {
     public: 

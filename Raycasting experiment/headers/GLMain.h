@@ -13,12 +13,21 @@
 #include "headers/GLShader.h"
 #include "headers/GLCamera.h"
 
-Camera *camera = new Camera();
-mouseLocation   mouse;
-gameTime        time;
+struct gameTime {
+    float delta;
+    float past;
+    float current;
+} time;
+struct mouseLocation {
+    float X;
+    float Y;
+} mouse;
+
+Camera camera;
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
+
 
 float           cubeVertices[]      = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -84,3 +93,7 @@ glm::vec3       positions[]         = {
     glm::vec3(1.5f,  0.2f, -1.5f),
     glm::vec3(-1.3f,  1.0f, -1.5f)
 };
+
+
+void mouseCallback(GLFWwindow *window, double xpos, double ypos);
+void keyboardCallback(GLFWwindow *window); // process all input

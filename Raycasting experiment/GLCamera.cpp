@@ -22,15 +22,22 @@ glm::mat4 Camera::getViewMatrix() {
 void Camera::processKeyboard(cameraMovement direction, float fpsNormalisation) {
     float velocity = MovementSpeed * fpsNormalisation;
     // movement goes here
+    if (direction == FORWARD)   Position    += Front * velocity;
+    if (direction == BACKWARD)  Position    -= Front * velocity;
+    if (direction == RIGHT)     Position    += Right * velocity;
+    if (direction == LEFT)      Position    -= Right * velocity;
 }
 
 void Camera::processMouseMovement(float xDelta, float yDelta, bool constrainPitch = true) {
     xDelta  *= MouseSensitivity;    yDelta  *= MouseSensitivity;
-    Yaw     += xDelta;              Pitch   += yDelta;
+    Yaw     += xDelta;              Pitch   -= yDelta;
 
-    if (constrainPitch)
-        if (Pitch > MAXPITCH) Pitch = MAXPITCH;
+    if (constrainPitch) {
+        if (Pitch > MAXPITCH)       Pitch = MAXPITCH;
         else if (Pitch < -MAXPITCH) Pitch = -MAXPITCH;
+    }
+
+    updateCamera();
 }
 
 void Camera::processMouseScroll(float delta) {

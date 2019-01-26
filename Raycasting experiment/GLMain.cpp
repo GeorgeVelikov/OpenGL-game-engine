@@ -5,15 +5,16 @@
 int main()
 {
 
-    mouse = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-    time  = {              0.f,               0.f };
+    mouse = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2 };
+    time  = { 0.f, 0.f, 0.f};
 
     setupGLFW();
     GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL", NULL, NULL);
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, frameBufferCheck);
     glfwSetCursorPosCallback(window, mouseCallback);
-    
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     // load all OpenGL function pointers for glad
     setupGLAD();
 
@@ -52,13 +53,15 @@ int main()
     glShader.use();
     glShader.setInt("texture1", 0);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // GL_LINE//GL_FILL solids
     // render loop    
-
     while (!glfwWindowShouldClose(window))
     {
+        time.current = glfwGetTime();
+        time.delta = time.current - time.past;
+        time.past = time.current;
+
         // input
-        processInput(window);
+        keyboardCallback(window);
 
         // render
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -69,23 +72,21 @@ int main()
         glBindTexture(GL_TEXTURE_2D, textureWood);
 
         // get marix uniform loc
-        glShader.use();
-
-        glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        glm::mat4 projection = glm::mat4(1.0f);
-        projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        glShader.use();        
 
         // pass transformation matrices to the shader
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
         glShader.setMat4("projection", projection);
+
+        glm::mat4 view = camera.getViewMatrix();
         glShader.setMat4("view", view);
 
         // render shape
+        glBindVertexArray(VAO);
         for (unsigned int i = 0; i <= 10; i++) {
-            glBindVertexArray(VAO);
             glm::mat4 model = glm::mat4(1.f);
             model = glm::translate(model, positions[i]);
-            float angle = float(glfwGetTime()) * 25.f;
+            float angle = 20.f * (i+1) * glfwGetTime();
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.f, .3f, .5f));
             glShader.setMat4("model", model);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -102,4 +103,31 @@ int main()
     glDeleteBuffers(1, &EBO);
     glfwTerminate();
     return 0;
+}
+
+
+void mouseCallback(GLFWwindow *window, double xpos, double ypos) {
+    mouseLocation offset;
+    offset  = { float(xpos - mouse.X), float(ypos - mouse.Y) };
+    mouse   = { float(xpos)          ,           float(ypos) };
+    camera.processMouseMovement(offset.X, offset.Y, true);
+}
+
+void keyboardCallback(GLFWwindow *window) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    else
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.processKeyboard(FORWARD, time.delta);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.processKeyboard(BACKWARD, time.delta);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.processKeyboard(RIGHT, time.delta);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.processKeyboard(LEFT, time.delta);
 }
