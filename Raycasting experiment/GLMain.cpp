@@ -4,9 +4,14 @@
 
 int main()
 {
-
     mouse = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2 };
     time  = { 0.f, 0.f, 0.f};
+
+    for (int x = 0; x < 10; x++) {
+        for (int z = 0; z < 10; z++) {
+            vecs.push_back(glm::vec3(CUBE_SIZE * 2 * x, 0.f, CUBE_SIZE * 2 * z));
+        }
+    }
 
     setupGLFW();
     GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL", NULL, NULL);
@@ -84,10 +89,10 @@ int main()
 
         // render shape
         glBindVertexArray(VAO);
-        for (unsigned int i = 0; i <= 10; i++) {
+        for (unsigned int i = 0; i < vecs.size(); i++) {
             glm::mat4 model = glm::mat4(1.f);
-            model = glm::translate(model, positions[i]);
-            float angle = 20.f * (i+1) * glfwGetTime();
+            model = glm::translate(model, vecs[i]);
+            float angle = 0;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.f, .3f, .5f));
             glShader.setMat4("model", model);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -111,7 +116,7 @@ void mouseCallback(GLFWwindow *window, double xpos, double ypos) {
     mouseLocation offset;
     offset  = { float(xpos - mouse.X), float(ypos - mouse.Y) };
     mouse   = { float(xpos)          ,           float(ypos) };
-    camera.processMouseMovement(offset.X, offset.Y, true);
+    camera.processMouseMovement(offset.X, offset.Y);
 }
 
 void keyboardCallback(GLFWwindow *window) {

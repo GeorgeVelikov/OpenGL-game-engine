@@ -28,7 +28,7 @@ void Camera::processKeyboard(cameraMovement direction, float fpsNormalisation) {
     if (direction == LEFT)      Position    -= Right * velocity;
 }
 
-void Camera::processMouseMovement(float xDelta, float yDelta, bool constrainPitch = true) {
+void Camera::processMouseMovement(float xDelta, float yDelta, bool constrainPitch) {
     xDelta  *= MouseSensitivity;    yDelta  *= MouseSensitivity;
     Yaw     += xDelta;              Pitch   -= yDelta;
 
