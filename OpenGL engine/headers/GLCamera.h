@@ -31,6 +31,7 @@ class Camera {
         void processKeyboard(cameraMovement direction, float fpsNormalisation);
         void processMouseMovement(float xDelta, float yDelta, bool constrainPitch = true);
         void processMouseScroll(float delta);
+        void obeyGravity(float delta, float floor);
 
     private:
         void updateCamera();

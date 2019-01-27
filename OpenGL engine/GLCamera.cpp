@@ -54,3 +54,8 @@ void Camera::updateCamera() {
     Right   = glm::normalize(glm::cross(Front, WorldUp)); 
     Up      = glm::normalize(glm::cross(Right, Front));
 }
+
+void Camera::obeyGravity(float delta, float floor) {
+    if (Position.y > floor+1.f) Position.y -= 0.2*delta;
+    else Position.y = floor+1.f;
+}

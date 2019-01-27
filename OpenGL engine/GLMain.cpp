@@ -17,9 +17,9 @@ int main()
     map.push_back("#....#...##..........#####.....#");
     map.push_back("####.######.....##.............#");
     map.push_back("#....#....##.....##...#####....#");
-    map.push_back("#..........##.  ..##.......##..#");
-    map.push_back("#...#.......##.  .##......#....#");
-    map.push_back("#...#........##. ##.......#.#..#");
+    map.push_back("#..........##.....##.......##..#");
+    map.push_back("#...#.......##....##......#....#");
+    map.push_back("#...#........##..##.......#.#..#");
     map.push_back("#...#.........###....##...#....#");
     map.push_back("#...#####..........#....###..#.#");
     map.push_back("#.............##...............#");
@@ -120,6 +120,7 @@ int main()
             glShader.setMat4("model", model);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         }
+        camera.obeyGravity(time.delta, EDGE_SIZE);
 
         // swap buffers and poll for io events
         glfwSwapBuffers(window);
