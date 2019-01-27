@@ -1,9 +1,16 @@
-# Raycasting-experiment
+# What is this?
 
-This is a pet project in which I started off inspired by John Carmack's & id software's incredible work.
+This repo started off as a rendering algorithm learning repository and stopped as soon as I hit the limitations to my initially planned project - a console based, character shaded game engine that uses raycasting to appear 3D. 
 
-The innitial idea was to create a basic UNICODE character game engine (instead of pixels) using a rendering technique called raycasting. But as I progressed there were obvious limitations to the console and the strings a console can display. A limit of around 160x160 in a single buffer existed and the solutions were either to "glue" together multiple buffers to a console or change up the project idea. I went with the latter as I had already learned what I aimed to learn from the initial unicode project.
+I have moved on to create a 3D engine in OpenGL using the GLM,GLSL,GLFW and GLAD and recreating the world initially made in the simple barebones unicode engine.
 
-I proceeded by starting off an opengl project and will try to re-create the unicode game engine and hopefully expand on it once I have recreated it. 
+This repository is purely to teach myself rendering techniques and general graphics programming while also being a pet project - a basic 3d engine
 
-- 22nd January 2019
+- 27/01/2019
+
+# What I learned so far 
+  - Raycasting
+  - Raymarching
+  - Raytracing
+  - Basic GLSL
+  
