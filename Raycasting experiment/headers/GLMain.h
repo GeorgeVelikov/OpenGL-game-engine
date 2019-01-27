@@ -28,38 +28,38 @@ Camera camera;
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
-#define CUBE_SIZE 0.5f
+#define EDGE_SIZE 0.5f
 
 float        cubeVertices[]  = {
-    -CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE,  0.0f, 0.0f,
-    CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE,  1.0f, 0.0f,
-    -CUBE_SIZE,  CUBE_SIZE, -CUBE_SIZE,  0.0f, 1.0f,
-    CUBE_SIZE,  CUBE_SIZE, -CUBE_SIZE,  1.0f, 1.0f,
+    -EDGE_SIZE, -EDGE_SIZE, -EDGE_SIZE,  0.0f, 0.0f,
+    EDGE_SIZE, -EDGE_SIZE, -EDGE_SIZE,  1.0f, 0.0f,
+    -EDGE_SIZE,  EDGE_SIZE, -EDGE_SIZE,  0.0f, 1.0f,
+    EDGE_SIZE,  EDGE_SIZE, -EDGE_SIZE,  1.0f, 1.0f,
 
-    -CUBE_SIZE, -CUBE_SIZE,  CUBE_SIZE,  0.0f, 0.0f,
-    CUBE_SIZE, -CUBE_SIZE,  CUBE_SIZE,  1.0f, 0.0f,
-    -CUBE_SIZE,  CUBE_SIZE,  CUBE_SIZE,  0.0f, 1.0f,
-    CUBE_SIZE,  CUBE_SIZE,  CUBE_SIZE,  1.0f, 1.0f,
+    -EDGE_SIZE, -EDGE_SIZE,  EDGE_SIZE,  0.0f, 0.0f,
+    EDGE_SIZE, -EDGE_SIZE,  EDGE_SIZE,  1.0f, 0.0f,
+    -EDGE_SIZE,  EDGE_SIZE,  EDGE_SIZE,  0.0f, 1.0f,
+    EDGE_SIZE,  EDGE_SIZE,  EDGE_SIZE,  1.0f, 1.0f,
 
-    -CUBE_SIZE,  CUBE_SIZE,  CUBE_SIZE,  1.0f, 0.0f,
-    -CUBE_SIZE,  CUBE_SIZE, -CUBE_SIZE,  1.0f, 1.0f,
-    -CUBE_SIZE, -CUBE_SIZE,  CUBE_SIZE,  0.0f, 0.0f,
-    -CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE,  0.0f, 1.0f,
+    -EDGE_SIZE,  EDGE_SIZE,  EDGE_SIZE,  1.0f, 0.0f,
+    -EDGE_SIZE,  EDGE_SIZE, -EDGE_SIZE,  1.0f, 1.0f,
+    -EDGE_SIZE, -EDGE_SIZE,  EDGE_SIZE,  0.0f, 0.0f,
+    -EDGE_SIZE, -EDGE_SIZE, -EDGE_SIZE,  0.0f, 1.0f,
 
-    CUBE_SIZE,  CUBE_SIZE,  CUBE_SIZE,  1.0f, 0.0f,
-    CUBE_SIZE,  CUBE_SIZE, -CUBE_SIZE,  1.0f, 1.0f,
-    CUBE_SIZE, -CUBE_SIZE,  CUBE_SIZE,  0.0f, 0.0f,
-    CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE,  0.0f, 1.0f,
+    EDGE_SIZE,  EDGE_SIZE,  EDGE_SIZE,  1.0f, 0.0f,
+    EDGE_SIZE,  EDGE_SIZE, -EDGE_SIZE,  1.0f, 1.0f,
+    EDGE_SIZE, -EDGE_SIZE,  EDGE_SIZE,  0.0f, 0.0f,
+    EDGE_SIZE, -EDGE_SIZE, -EDGE_SIZE,  0.0f, 1.0f,
 
-    -CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE,  0.0f, 1.0f,
-    CUBE_SIZE, -CUBE_SIZE, -CUBE_SIZE,  1.0f, 1.0f,
-    -CUBE_SIZE, -CUBE_SIZE,  CUBE_SIZE,  0.0f, 0.0f,
-    CUBE_SIZE, -CUBE_SIZE,  CUBE_SIZE,  1.0f, 0.0f,
+    -EDGE_SIZE, -EDGE_SIZE, -EDGE_SIZE,  0.0f, 1.0f,
+    EDGE_SIZE, -EDGE_SIZE, -EDGE_SIZE,  1.0f, 1.0f,
+    -EDGE_SIZE, -EDGE_SIZE,  EDGE_SIZE,  0.0f, 0.0f,
+    EDGE_SIZE, -EDGE_SIZE,  EDGE_SIZE,  1.0f, 0.0f,
 
-    -CUBE_SIZE,  CUBE_SIZE, -CUBE_SIZE,  0.0f, 1.0f,
-    CUBE_SIZE,  CUBE_SIZE, -CUBE_SIZE,  1.0f, 1.0f,
-    -CUBE_SIZE,  CUBE_SIZE,  CUBE_SIZE,  0.0f, 0.0f,
-    CUBE_SIZE,  CUBE_SIZE,  CUBE_SIZE,  1.0f, 0.0f,
+    -EDGE_SIZE,  EDGE_SIZE, -EDGE_SIZE,  0.0f, 1.0f,
+    EDGE_SIZE,  EDGE_SIZE, -EDGE_SIZE,  1.0f, 1.0f,
+    -EDGE_SIZE,  EDGE_SIZE,  EDGE_SIZE,  0.0f, 0.0f,
+    EDGE_SIZE,  EDGE_SIZE,  EDGE_SIZE,  1.0f, 0.0f,
 };
 unsigned int indices[]       = {
     0, 1, 2, // half of a square (triangle)
@@ -80,21 +80,8 @@ unsigned int indices[]       = {
     20, 21, 22,
     21, 22, 23,
 };
-glm::vec3    positions[]     = {
-    glm::vec3(0.0f,  0.0f,  -2.0f),
-    glm::vec3(2.0f,  5.0f, -15.0f),
-    glm::vec3(-1.5f, -2.2f, -2.5f),
-    glm::vec3(-3.8f, -2.0f, -12.3f),
-    glm::vec3(2.4f, -0.4f, -3.5f),
-    glm::vec3(-1.7f,  3.0f, -7.5f),
-    glm::vec3(1.3f, -2.0f, -2.5f),
-    glm::vec3(1.5f,  2.0f, -2.5f),
-    glm::vec3(1.5f,  0.2f, -1.5f),
-    glm::vec3(-1.3f,  1.0f, -1.5f)
-};
 
-std::vector<glm::vec3> vecs;
-
+std::vector<glm::vec3> positions;
 
 void mouseCallback(GLFWwindow *window, double xpos, double ypos);
 void keyboardCallback(GLFWwindow *window); // process all input

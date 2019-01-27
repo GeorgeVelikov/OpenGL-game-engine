@@ -7,9 +7,32 @@ int main()
     mouse = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2 };
     time  = { 0.f, 0.f, 0.f};
 
-    for (int x = 0; x < 10; x++) {
-        for (int z = 0; z < 10; z++) {
-            vecs.push_back(glm::vec3(CUBE_SIZE * 2 * x, 0.f, CUBE_SIZE * 2 * z));
+    std::vector<std::string> map;
+    map.push_back("################################");
+    map.push_back("#.......#.......##.............#");
+    map.push_back("#.......#..##.....#....#.#.#...#");
+    map.push_back("#..#############...#...........#");
+    map.push_back("#....#..............#...#.#....#");
+    map.push_back("#....#....######...............#");
+    map.push_back("#....#...##..........#####.....#");
+    map.push_back("####.######.....##.............#");
+    map.push_back("#....#....##.....##...#####....#");
+    map.push_back("#..........##.  ..##.......##..#");
+    map.push_back("#...#.......##.  .##......#....#");
+    map.push_back("#...#........##. ##.......#.#..#");
+    map.push_back("#...#.........###....##...#....#");
+    map.push_back("#...#####..........#....###..#.#");
+    map.push_back("#.............##...............#");
+    map.push_back("################################");
+
+    // save 3d world
+    for (int x = 0; x < map.size(); x++) {
+        for (int z = 0; z < map[x].size(); z++) {
+            if (map[x][z] == '#')
+                positions.push_back(glm::vec3(EDGE_SIZE * 2 * x, EDGE_SIZE * 2, EDGE_SIZE * 2 * z));
+            else if(map[x][z] == '.')
+                positions.push_back(glm::vec3(EDGE_SIZE * 2 * x, 0.f, EDGE_SIZE * 2 * z));
+            else continue;
         }
     }
 
@@ -57,7 +80,7 @@ int main()
 
     glShader.use();
     glShader.setInt("texture1", 0);
-
+   
     // render loop    
     while (!glfwWindowShouldClose(window))
     {
@@ -89,9 +112,9 @@ int main()
 
         // render shape
         glBindVertexArray(VAO);
-        for (unsigned int i = 0; i < vecs.size(); i++) {
+        for (unsigned int i = 0; i < positions.size(); i++) {
             glm::mat4 model = glm::mat4(1.f);
-            model = glm::translate(model, vecs[i]);
+            model = glm::translate(model, positions[i]);
             float angle = 0;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.f, .3f, .5f));
             glShader.setMat4("model", model);
