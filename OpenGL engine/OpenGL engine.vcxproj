@@ -78,16 +78,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\GL\glad\include;C:\GL\glfw-3.2.1.bin.WIN64\include\GLFW;C:\GL\glew-2.1.0\include\GL;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\GL\glad\src;C:\GL\glew-2.1.0\lib\Release\x64;C:\GL\glfw-3.2.1.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\OpenCV\opencv\build\include;C:\GL\glad\include;C:\GL\glfw-3.2.1.bin.WIN64\include\GLFW;C:\GL\glew-2.1.0\include\GL;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\OpenCV\opencv\build\x64\vc15\lib;C:\GL\glad\src;C:\GL\glew-2.1.0\lib\Release\x64;C:\GL\glfw-3.2.1.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\GL\glfw-3.2.1.bin.WIN64\include\GLFW;C:\GL\glew-2.1.0\include\GL;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\GL\glew-2.1.0\lib\Release\x64;C:\GL\glfw-3.2.1.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\GL\glad\include;C:\GL\glfw-3.2.1.bin.WIN64\include\GLFW;C:\GL\glew-2.1.0\include\GL;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\GL\glad\src;C:\GL\glew-2.1.0\lib\Release\x64;C:\GL\glfw-3.2.1.bin.WIN64\lib-vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -162,6 +162,7 @@
     <ClCompile Include="..\..\..\..\..\..\GL\glad\src\glad.cpp" />
     <ClCompile Include="GLCamera.cpp" />
     <ClCompile Include="GLFunctions.cpp" />
+    <ClCompile Include="GLMap.cpp" />
     <ClCompile Include="GLShader.cpp" />
     <ClCompile Include="UNICODERaycasting.cpp" />
     <ClCompile Include="GLMain.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="headers\GLCamera.h" />
     <ClInclude Include="headers\GLFunctions.h" />
     <ClInclude Include="headers\GLMain.h" />
+    <ClInclude Include="headers\GLMap.h" />
     <ClInclude Include="headers\GLShader.h" />
     <ClInclude Include="headers\stb_image.h" />
     <ClInclude Include="headers\UNICODEDefinitions.h" />
@@ -188,6 +190,8 @@
     <None Include="shaders\shader.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="map\perlin32x32.png" />
+    <Image Include="map\perlin512x512.png" />
     <Image Include="textures\tile.png" />
     <Image Include="textures\wood.png" />
   </ItemGroup>

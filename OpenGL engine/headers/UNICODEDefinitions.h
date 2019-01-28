@@ -1,11 +1,4 @@
-﻿#include <iostream>
-#include <chrono>
-#include <vector>
-#include <algorithm>
-#include <math.h>
-#include <Windows.h>
-
-#define PI 3.1415927
+﻿#define PI 3.1415927
 #define VXP(x1,y1, x2,y2) (x1*y2 - x2*y1)
 
 // might want to change width and height to your prefferenced window size as rendering is not dynamic just yet

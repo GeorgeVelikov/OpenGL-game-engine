@@ -1,38 +1,31 @@
 #include "stdafx.h"
-#include "headers/GLMain.h"
+#include <iostream>  
+#include <math.h>
+#include <vector>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <glad/glad.h>
+#include <glfw3.h>
+
+#include "headers/GLFunctions.h"
+#include "headers/GLShader.h"
+#include "headers/GLCamera.h"
+#include "headers/GLMain.h"
+#include "headers/GLMap.h"
 
 int main()
 {
     mouse = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2 };
     time  = { 0.f, 0.f, 0.f};
 
-    std::vector<std::string> map;
-    map.push_back("################################");
-    map.push_back("#.......#.......##.............#");
-    map.push_back("#.......#..##.....#....#.#.#...#");
-    map.push_back("#..#############...#...........#");
-    map.push_back("#....#..............#...#.#....#");
-    map.push_back("#....#....######...............#");
-    map.push_back("#....#...##..........#####.....#");
-    map.push_back("####.######.....##.............#");
-    map.push_back("#....#....##.....##...#####....#");
-    map.push_back("#..........##.....##.......##..#");
-    map.push_back("#...#.......##....##......#....#");
-    map.push_back("#...#........##..##.......#.#..#");
-    map.push_back("#...#.........###....##...#....#");
-    map.push_back("#...#####..........#....###..#.#");
-    map.push_back("#.............##...............#");
-    map.push_back("################################");
 
-    // save 3d world
-    for (int x = 0; x < map.size(); x++) {
-        for (int z = 0; z < map[x].size(); z++) {
-            if (map[x][z] == '#')
-                positions.push_back(glm::vec3(EDGE_SIZE * 2 * x, EDGE_SIZE * 2, EDGE_SIZE * 2 * z));
-            else if(map[x][z] == '.')
+    // save 3d world as a big pane
+    for (int x = 0; x < 32; x++) {
+        for (int z = 0; z < 32; z++) {
                 positions.push_back(glm::vec3(EDGE_SIZE * 2 * x, 0.f, EDGE_SIZE * 2 * z));
-            else continue;
         }
     }
 
@@ -41,6 +34,7 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, frameBufferCheck);
     glfwSetCursorPosCallback(window, mouseCallback);
+ 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // load all OpenGL function pointers for glad
@@ -84,10 +78,7 @@ int main()
     // render loop    
     while (!glfwWindowShouldClose(window))
     {
-        std::cout << 1 / time.delta << '\n';
-        time.current = glfwGetTime();
-        time.delta = time.current - time.past;
-        time.past = time.current;
+        getFrameTime(time);
 
         // input
         keyboardCallback(window);
@@ -118,9 +109,8 @@ int main()
             float angle = 0;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.f, .3f, .5f));
             glShader.setMat4("model", model);
-            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
-        camera.obeyGravity(time.delta, EDGE_SIZE);
 
         // swap buffers and poll for io events
         glfwSwapBuffers(window);
@@ -160,4 +150,10 @@ void keyboardCallback(GLFWwindow *window) {
         camera.processKeyboard(RIGHT, time.delta);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         camera.processKeyboard(LEFT, time.delta);
+}
+
+void getFrameTime(gameTime &gt) {
+    gt.current = glfwGetTime();
+    gt.delta = gt.current - gt.past;
+    gt.past = gt.current;
 }
