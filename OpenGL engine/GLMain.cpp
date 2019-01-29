@@ -20,12 +20,12 @@ int main()
 {
     mouse = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2 };
     time  = { 0.f, 0.f, 0.f};
-    createPerlinMap("map/perlin32x32.bmp", map);
-
+    createPerlinMap("map/perlin512x512.png", mapPerlin);
+  
     // save 3d world as a big pane
-    for (int x = 0; x < sqrt(map.size()); x++) {
-        for (int z = 0; z < sqrt(map.size()); z++) {
-            positions.push_back(glm::vec3(EDGE_SIZE * 2 * x, map[x*sqrt(map.size()) + z] * 2 * EDGE_SIZE, EDGE_SIZE * 2 * z));
+    for (int x = 0; x < RENDER_DISTANCE; x++) {
+        for (int z = 0; z < RENDER_DISTANCE; z++) {
+            positions.push_back(glm::vec3(EDGE_SIZE * 2 * x, mapPerlin[x*sqrt(mapPerlin.size()) + z] * 2 * EDGE_SIZE, EDGE_SIZE * 2 * z));
         }
     }
 
@@ -74,12 +74,14 @@ int main()
 
     glShader.use();
     glShader.setInt("texture1", 0);
-   
+  
+    glm::vec3 oldPos = camera.Position;
+
     // render loop    
     while (!glfwWindowShouldClose(window))
     {
         getFrameTime(time);
-
+        
         // input
         keyboardCallback(window);
 
@@ -99,7 +101,26 @@ int main()
         glShader.setMat4("projection", projection);
 
         glm::mat4 view = camera.getViewMatrix();
-        glShader.setMat4("view", view);
+        glShader.setMat4("view", view);        
+
+        if (oldPos.x != camera.Position.x || oldPos.z != camera.Position.z) {
+            oldPos.x = camera.Position.x;
+            oldPos.z = camera.Position.z;
+            positions.clear();
+            std::cout << oldPos.x << oldPos.z << '\n';
+            // save 3d world as a big pane
+            for (int x = 0; x < RENDER_DISTANCE * 2; x++) {
+                for (int z = 0; z < RENDER_DISTANCE * 2; z++) {
+                    int mapWidth = sqrt(mapPerlin.size()) - 1;
+                    int perlinX = abs(x + (int)camera.Position.x) % mapWidth;
+                    int perlinY = abs(z + (int)camera.Position.z) % mapWidth;                   
+                    positions.push_back(glm::vec3(EDGE_SIZE * 2 * ((float)x-RENDER_DISTANCE) + camera.Position.x,            // x
+                                                  EDGE_SIZE * 2 * mapPerlin[perlinX*mapWidth + perlinY],      // y
+                                                  EDGE_SIZE * 2 * ((float)z-RENDER_DISTANCE) + camera.Position.z));          // z
+                }
+            }
+        }
+
 
         // render shape
         glBindVertexArray(VAO);
@@ -111,7 +132,7 @@ int main()
             glShader.setMat4("model", model);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         }
-
+        positions.empty();
         // swap buffers and poll for io events
         glfwSwapBuffers(window);
         glfwPollEvents();

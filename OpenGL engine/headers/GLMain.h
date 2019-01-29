@@ -12,9 +12,10 @@ struct mouseLocation {
 Camera camera;
 //cv::Mat mapImage;
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
 #define EDGE_SIZE 0.1f
+#define RENDER_DISTANCE 32
 
 float        cubeVertices[]  = {
     // top pane
@@ -70,7 +71,7 @@ unsigned int indices[]       = {
 };
 
 std::vector<glm::vec3> positions;
-std::vector<int> map;
+std::vector<int> mapPerlin;
 
 void mouseCallback(GLFWwindow *window, double xpos, double ypos);
 void keyboardCallback(GLFWwindow *window); // process all input
