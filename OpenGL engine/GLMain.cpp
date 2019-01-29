@@ -96,24 +96,23 @@ int main()
         glm::mat4 view = camera.getViewMatrix();
         glShader.setMat4("view", view);        
 
-        if (oldPos.x != camera.Position.x || oldPos.z != camera.Position.z) {
-            oldPos.x = camera.Position.x;
-            oldPos.z = camera.Position.z;
-            positions.clear();
+        // set render distance and objects to render
+        if (oldPos != camera.Position) {
+            oldPos = camera.Position;
+            positions.clear(); // clear objects from space
             std::cout << oldPos.x << oldPos.z << '\n';
             // save 3d world as a big pane
             for (int x = 0; x < RENDER_DISTANCE * 2; x++) {
                 for (int z = 0; z < RENDER_DISTANCE * 2; z++) {
-                    int mapWidth = sqrt(mapPerlin.size()) - 1;
-                    int perlinX = abs(x + (int)camera.Position.x) % mapWidth;
+                    int mapWidth = sqrt(mapPerlin.size());
+                    int perlinX = abs(x + (int)camera.Position.x) % mapWidth * mapWidth;
                     int perlinY = abs(z + (int)camera.Position.z) % mapWidth;                   
-                    positions.push_back(glm::vec3(EDGE_SIZE * 2 * ((float)x-RENDER_DISTANCE) + camera.Position.x,            // x
-                                                  EDGE_SIZE * 2 * mapPerlin[perlinX*mapWidth + perlinY],      // y
-                                                  EDGE_SIZE * 2 * ((float)z-RENDER_DISTANCE) + camera.Position.z));          // z
+                    positions.push_back(glm::vec3(EDGE_SIZE * 2 * ((float)x-RENDER_DISTANCE) + camera.Position.x,   // x
+                                                  EDGE_SIZE * 2 * mapPerlin[perlinX + perlinY],                     // y
+                                                  EDGE_SIZE * 2 * ((float)z-RENDER_DISTANCE) + camera.Position.z)); // z
                 }
             }
         }
-
 
         // render shape
         glBindVertexArray(VAO);
@@ -125,7 +124,7 @@ int main()
             glShader.setMat4("model", model);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         }
-        positions.empty();
+
         // swap buffers and poll for io events
         glfwSwapBuffers(window);
         glfwPollEvents();
