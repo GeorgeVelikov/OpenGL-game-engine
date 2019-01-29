@@ -1,0 +1,1 @@
+void createPerlinMap(std::string path, std::vector<int> &map);

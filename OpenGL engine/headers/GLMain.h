@@ -70,6 +70,7 @@ unsigned int indices[]       = {
 };
 
 std::vector<glm::vec3> positions;
+std::vector<int> map;
 
 void mouseCallback(GLFWwindow *window, double xpos, double ypos);
 void keyboardCallback(GLFWwindow *window); // process all input

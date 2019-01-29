@@ -20,12 +20,12 @@ int main()
 {
     mouse = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2 };
     time  = { 0.f, 0.f, 0.f};
-
+    createPerlinMap("map/perlin32x32.bmp", map);
 
     // save 3d world as a big pane
-    for (int x = 0; x < 32; x++) {
-        for (int z = 0; z < 32; z++) {
-                positions.push_back(glm::vec3(EDGE_SIZE * 2 * x, 0.f, EDGE_SIZE * 2 * z));
+    for (int x = 0; x < sqrt(map.size()); x++) {
+        for (int z = 0; z < sqrt(map.size()); z++) {
+            positions.push_back(glm::vec3(EDGE_SIZE * 2 * x, map[x*sqrt(map.size()) + z] * 2 * EDGE_SIZE, EDGE_SIZE * 2 * z));
         }
     }
 
@@ -109,7 +109,7 @@ int main()
             float angle = 0;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.f, .3f, .5f));
             glShader.setMat4("model", model);
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         }
 
         // swap buffers and poll for io events
