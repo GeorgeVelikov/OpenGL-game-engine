@@ -21,13 +21,6 @@ int main()
     mouse = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2 };
     time  = { 0.f, 0.f, 0.f};
     createPerlinMap("map/perlin512x512.png", mapPerlin);
-  
-    // save 3d world as a big pane
-    for (int x = 0; x < RENDER_DISTANCE; x++) {
-        for (int z = 0; z < RENDER_DISTANCE; z++) {
-            positions.push_back(glm::vec3(EDGE_SIZE * 2 * x, mapPerlin[x*sqrt(mapPerlin.size()) + z] * 2 * EDGE_SIZE, EDGE_SIZE * 2 * z));
-        }
-    }
 
     setupGLFW();
     GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL", NULL, NULL);
@@ -75,7 +68,7 @@ int main()
     glShader.use();
     glShader.setInt("texture1", 0);
   
-    glm::vec3 oldPos = camera.Position;
+    glm::vec3 oldPos = { 0.f, 0.f, 0.f };
 
     // render loop    
     while (!glfwWindowShouldClose(window))
