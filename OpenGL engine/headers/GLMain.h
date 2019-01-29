@@ -15,7 +15,7 @@ Camera camera;
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
 #define EDGE_SIZE 0.1f
-#define RENDER_DISTANCE 16
+
 
 float        cubeVertices[]  = {
     // top pane

@@ -96,6 +96,8 @@ int main()
         glm::mat4 view = camera.getViewMatrix();
         glShader.setMat4("view", view);        
 
+        int perlinX, perlinY;
+
         // set render distance and objects to render
         if (oldPos != camera.Position) {
             oldPos = camera.Position;
@@ -105,11 +107,11 @@ int main()
             for (int x = 0; x < RENDER_DISTANCE * 2; x++) {
                 for (int z = 0; z < RENDER_DISTANCE * 2; z++) {
                     int mapWidth = sqrt(mapPerlin.size());
-                    int perlinX = abs(x + (int)camera.Position.x) % mapWidth * mapWidth;
-                    int perlinY = abs(z + (int)camera.Position.z) % mapWidth;                   
-                    positions.push_back(glm::vec3(EDGE_SIZE * 2 * ((float)x-RENDER_DISTANCE) + camera.Position.x,   // x
-                                                  EDGE_SIZE * 2 * mapPerlin[perlinX + perlinY],                     // y
-                                                  EDGE_SIZE * 2 * ((float)z-RENDER_DISTANCE) + camera.Position.z)); // z
+                    perlinX = abs(x + (int)(camera.Position.x / (EDGE_SIZE*2.))) % mapWidth * mapWidth;
+                    perlinY = abs(z + (int)(camera.Position.z / (EDGE_SIZE*2.))) % mapWidth;
+                    positions.push_back(glm::vec3(EDGE_SIZE * 2 * ((float)x-RENDER_DISTANCE) + camera.Position.x - fmod(camera.Position.x, EDGE_SIZE*2.),   // x
+                                                  EDGE_SIZE * 2 * mapPerlin[perlinX + perlinY],                                                             // y
+                                                  EDGE_SIZE * 2 * ((float)z-RENDER_DISTANCE) + camera.Position.z - fmod(camera.Position.z, EDGE_SIZE*2.))); // z
                 }
             }
         }
