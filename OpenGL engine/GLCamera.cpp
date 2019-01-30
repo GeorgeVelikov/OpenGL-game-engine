@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <math.h>
+#include <vector>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -9,9 +10,9 @@
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) {
     Front = glm::vec3(0.0f, 0.0f, -1.0f);
-    MovementSpeed = SPEED;
-    MouseSensitivity = SENSITIVITY;
-    Zoom = FOV;
+    MovementSpeed = CAMERA_MOVEMENT_SPEED;
+    MouseSensitivity = CAMERA_TURN_SENSITIVITY;
+    Zoom = CAMERA_FOV;
     Position = position;
     WorldUp = up;
     Yaw = yaw;
@@ -37,8 +38,8 @@ void Camera::processMouseMovement(float xDelta, float yDelta, bool constrainPitc
     Yaw     += xDelta;              Pitch   -= yDelta;
 
     if (constrainPitch) {
-        if (Pitch > MAXPITCH)       Pitch = MAXPITCH;
-        else if (Pitch < -MAXPITCH) Pitch = -MAXPITCH;
+        if (Pitch > CAMERA_MAX_PITCH)       Pitch = CAMERA_MAX_PITCH;
+        else if (Pitch < -CAMERA_MAX_PITCH) Pitch = -CAMERA_MAX_PITCH;
     }
 
     updateCamera();
@@ -49,6 +50,12 @@ void Camera::processMouseScroll(float delta) {
     return; 
 }
 
+void Camera::obeyGravity(float delta, float floor) {
+    if (Position.y > floor+1.f) Position.y -= 0.2*delta;
+    else Position.y = floor+1.f;
+}
+
+// private
 void Camera::updateCamera() {
     glm::vec3 front;
     front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
@@ -57,9 +64,4 @@ void Camera::updateCamera() {
     Front   = glm::normalize(front);
     Right   = glm::normalize(glm::cross(Front, WorldUp)); 
     Up      = glm::normalize(glm::cross(Right, Front));
-}
-
-void Camera::obeyGravity(float delta, float floor) {
-    if (Position.y > floor+1.f) Position.y -= 0.2*delta;
-    else Position.y = floor+1.f;
 }

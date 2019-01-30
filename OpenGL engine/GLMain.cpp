@@ -1,27 +1,31 @@
 #include "stdafx.h"
+
+// standard libraries
 #include <iostream>  
 #include <math.h>
 #include <vector>
 
+// glm
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+//glad
 #include <glad/glad.h>
 #include <glfw3.h>
 
+// headers
 #include "headers/GLFunctions.h"
 #include "headers/GLShader.h"
 #include "headers/GLCamera.h"
-#include "headers/GLMain.h"
 #include "headers/GLMap.h"
+
+// all includes before main.h
+#include "headers/GLMain.h"
+
 
 int main()
 {
-    mouse = { SCREEN_WIDTH/2, SCREEN_HEIGHT/2 };
-    time  = { 0.f, 0.f, 0.f};
-    createPerlinMap("map/perlin512x512.png", mapPerlin);
-
     setupGLFW();
     GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL", NULL, NULL);
     glfwMakeContextCurrent(window);
@@ -68,7 +72,10 @@ int main()
     glShader.use();
     glShader.setInt("texture1", 0);
   
-    glm::vec3 oldPos = { 0.f, 0.f, 0.f };
+    // general properties
+    mouse   = { SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
+    time    = { 0.f, 0.f, 0.f };
+    map.loadPerlinImage("map/perlin512x512.png");
 
     // render loop    
     while (!glfwWindowShouldClose(window))
@@ -90,28 +97,24 @@ int main()
         glShader.use();        
 
         // pass transformation matrices to the shader
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, .1f, 100.f);
         glShader.setMat4("projection", projection);
 
         glm::mat4 view = camera.getViewMatrix();
         glShader.setMat4("view", view);        
 
-        int perlinX, perlinY;
-
         // set render distance and objects to render
-        if (oldPos != camera.Position) {
-            oldPos = camera.Position;
-            positions.clear(); // clear objects from space
-            std::cout << oldPos.x << oldPos.z << '\n';
-            // save 3d world as a big pane
-            for (int x = 0; x < RENDER_DISTANCE * 2; x++) {
-                for (int z = 0; z < RENDER_DISTANCE * 2; z++) {
-                    int mapWidth = sqrt(mapPerlin.size());
-                    perlinX = abs(x + (int)(camera.Position.x / (EDGE_SIZE*2.))) % mapWidth * mapWidth;
-                    perlinY = abs(z + (int)(camera.Position.z / (EDGE_SIZE*2.))) % mapWidth;
-                    positions.push_back(glm::vec3(EDGE_SIZE * 2 * ((float)x-RENDER_DISTANCE) + camera.Position.x - fmod(camera.Position.x, EDGE_SIZE*2.),   // x
-                                                  EDGE_SIZE * 2 * mapPerlin[perlinX + perlinY],                                                             // y
-                                                  EDGE_SIZE * 2 * ((float)z-RENDER_DISTANCE) + camera.Position.z - fmod(camera.Position.z, EDGE_SIZE*2.))); // z
+        if (camera.PositionOld != camera.Position) {
+            camera.PositionOld  = camera.Position;
+            positions.clear(); // clear objects that are to be rendered
+            // 2for loops as we're not concerned about adding layers to the world
+            for (int x = 0; x < MAP_RENDER_DISTANCE * 2; x++) {
+                for (int z = 0; z < MAP_RENDER_DISTANCE * 2; z++) {
+                    int perlinX = abs(x + (int)(camera.Position.x / (EDGE_SIZE*2.))) % map.width * map.width; // absolute values as negative indices in arrays are problematic
+                    int perlinY = abs(z + (int)(camera.Position.z / (EDGE_SIZE*2.))) % map.width;
+                    positions.push_back(glm::vec3(EDGE_SIZE * 2 * ((float)x-MAP_RENDER_DISTANCE) + camera.Position.x - fmod(camera.Position.x, EDGE_SIZE*2.),   // x
+                                                  EDGE_SIZE * 2 * map.arrayPerlin[perlinX + perlinY],                                                             // y
+                                                  EDGE_SIZE * 2 * ((float)z-MAP_RENDER_DISTANCE) + camera.Position.z - fmod(camera.Position.z, EDGE_SIZE*2.))); // z
                 }
             }
         }
