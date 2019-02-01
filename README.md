@@ -13,4 +13,6 @@ This repository is purely to teach myself rendering techniques and general graph
   - Raymarching
   - Raytracing
   - Basic GLSL
+  - Perlin seed terrain/image generation
+  - Occlusion culling
   
