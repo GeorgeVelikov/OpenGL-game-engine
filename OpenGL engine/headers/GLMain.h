@@ -1,10 +1,10 @@
-struct gameTime {
+struct GameTime {
     float delta;
     float past;
     float current;
 } time;
 
-struct mouseLocation {
+struct MouseLocation {
     float X;
     float Y;
 } mouse;
@@ -51,21 +51,21 @@ float        cubeVertices[]  = {
 };
 unsigned int indices[]       = {
     0, 1, 2, // half of a square (triangle)
-    1, 2, 3,
+    1, 3, 2,
 
     4, 5, 6,
-    5, 6, 7,
+    5, 7, 6,
 
-    8, 9, 10,
+    8, 10, 9,
     9, 10, 11,
 
-    12, 13, 14,
+    12, 14, 13,
     13, 14, 15,
 
     16, 17, 18,
-    17, 18, 19,
+    17, 19, 18,
 
-    20, 21, 22,
+    20, 22, 21,
     21, 22, 23,
 };
 
@@ -73,4 +73,4 @@ std::vector<glm::vec3> positions;
 
 void mouseCallback(GLFWwindow *window, double xpos, double ypos);
 void keyboardCallback(GLFWwindow *window); // process all input
-void getFrameTime(gameTime &gt);
+void getFrameTime(GameTime &gt);

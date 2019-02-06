@@ -41,6 +41,12 @@ int main()
     Shader glShader("shaders/shader.vs", "shaders/shader.fs");
     glEnable(GL_DEPTH_TEST);
 
+    // backface culling
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CW);
+
+
     // vertex buffer, vertex array and element buffer
     unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -109,8 +115,8 @@ int main()
             positions.clear(); // clear objects that are to be rendered
             // 2for loops as we're not concerned about adding layers to the world
             for (int x = 0; x < MAP_RENDER_DISTANCE * 2; x++) {
+                int perlinX = abs(x + (int)(camera.Position.x / (EDGE_SIZE*2.))) % map.width * map.width; // absolute values as negative indices in arrays are problematic
                 for (int z = 0; z < MAP_RENDER_DISTANCE * 2; z++) {
-                    int perlinX = abs(x + (int)(camera.Position.x / (EDGE_SIZE*2.))) % map.width * map.width; // absolute values as negative indices in arrays are problematic
                     int perlinY = abs(z + (int)(camera.Position.z / (EDGE_SIZE*2.))) % map.width;
                     positions.push_back(glm::vec3(EDGE_SIZE * 2 * ((float)x-MAP_RENDER_DISTANCE) + camera.Position.x - fmod(camera.Position.x, EDGE_SIZE*2.),   // x
                                                   EDGE_SIZE * 2 * map.arrayPerlin[perlinX + perlinY],                                                             // y
@@ -145,7 +151,7 @@ int main()
 
 
 void mouseCallback(GLFWwindow *window, double xpos, double ypos) {
-    mouseLocation offset;
+    MouseLocation offset;
     offset  = { float(xpos - mouse.X), float(ypos - mouse.Y) };
     mouse   = { float(xpos)          ,           float(ypos) };
     camera.processMouseMovement(offset.X, offset.Y);
@@ -170,7 +176,7 @@ void keyboardCallback(GLFWwindow *window) {
         camera.processKeyboard(LEFT, time.delta);
 }
 
-void getFrameTime(gameTime &gt) {
+void getFrameTime(GameTime &gt) {
     gt.current = glfwGetTime();
     gt.delta = gt.current - gt.past;
     gt.past = gt.current;

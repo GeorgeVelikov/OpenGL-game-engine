@@ -1,4 +1,4 @@
-enum cameraMovement {
+enum CameraMovement {
     FORWARD,
     BACKWARD,
     LEFT,
@@ -24,7 +24,7 @@ class Camera {
 
         // class funcs
         glm::mat4 getViewMatrix();
-        void processKeyboard(cameraMovement direction, float fpsNormalisation);
+        void processKeyboard(CameraMovement direction, float fpsNormalisation);
         void processMouseMovement(float xDelta, float yDelta, bool constrainPitch = true);
         void processMouseScroll(float delta);
         void obeyGravity(float delta, float floor);
